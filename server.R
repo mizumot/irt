@@ -125,19 +125,19 @@ shinyServer(function(input, output) {
              if (input$type == "1PL") {
                  
                  result <- rasch(dat)
-                 est <- factor.scores(result)
+                 est <- factor.scores(result, resp.pattern=dat)
                  list(result = result, est = est)
                  
              } else if (input$type == "2PL") {
                  
                  result <- ltm(dat ~ z1)
-                 est <- factor.scores(result)
+                 est <- factor.scores(result, resp.pattern=dat)
                  list(result = result, est = est)
                  
              } else {
                  
                  result <- tpm(dat)
-                 est <- factor.scores(result)
+                 est <- factor.scores(result, resp.pattern=dat)
                  list(result = result, est = est)
                  
              }
@@ -641,13 +641,15 @@ shinyServer(function(input, output) {
     
     polyperson.est <- reactive({
         
+        dat <- read.csv(text=input$text2, sep="\t")
+
         if (input$person == "show.theta") {
             
                   if (input$model == "gpcm.mdl") {
             
                     est <- polydata()$est1
 
-                    est <- factor.scores(est)
+                    est <- factor.scores(est, resp.pattern=dat)
                     
                     p.est <- data.frame(est$score.dat$z1, est$score.dat$se.z1)
                     colnames(p.est) <- c("Theta", "SE")
@@ -657,7 +659,7 @@ shinyServer(function(input, output) {
             
                     est <- polydata()$est2
                     
-                    est <- factor.scores(est)
+                    est <- factor.scores(est, resp.pattern=dat)
                     
                     p.est <- data.frame(est$score.dat$z1, est$score.dat$se.z1)
                     colnames(p.est) <- c("Theta", "SE")
